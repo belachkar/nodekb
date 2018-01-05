@@ -1,0 +1,9 @@
+/node_modules
+/npm-debug.log
+
+/bower.json
+/component.json
+/public/bower_components
+
+/npm-shrinkwrap.json
+/.idea
