@@ -5,9 +5,9 @@ $(document).ready(function(){
     const id = $(this).attr('data-id');
     $.ajax({
       type: 'DELETE',
-      url: '/article/'+id,
+      url: '/articles/'+id,
       success: function (response) {
-        alert('Deleting Article');
+        console.log('Deleting Article');
         window.location.href='/';
       },
       error: function (err) {
