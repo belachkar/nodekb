@@ -41,8 +41,6 @@ let Article = require('./models/article');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-
-
 // Home route
 app.get('/', (req, res) => {
   Article.find({}, function (err, articles) {

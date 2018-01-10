@@ -7,8 +7,13 @@
     "start": "node app"
   },
   "author": "Belachkar Ali",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/belachkar/nodekb.git"
+  },
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
     "connect-flash": "^0.1.1",
     "express": "^4.16.2",
@@ -16,6 +21,8 @@
     "express-session": "^1.15.6",
     "express-validator": "^4.3.0",
     "mongoose": "^5.0.0-rc2",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
     "pug": "^2.0.0-rc.4"
   }
 }
