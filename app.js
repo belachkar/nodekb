@@ -2,8 +2,6 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-//const expressValidator = require('express-validator');
-//const flash = require('connect-flash');
 const session = require('express-session');
 
 mongoose.connect('mongodb://localhost/nodekb');
@@ -12,13 +10,9 @@ let db = mongoose.connection;
 // Check connection
 db.once('open', function () {
   console.log('connected to mongo DB');
-});
-
-// Check for DB errors
-db.on('error', function (err) {
+}).on('error', function (err) {
   console.log(err);
 });
-
 
 // Init App
 const app = express();
@@ -33,14 +27,12 @@ app.use(session({
   saveUninitialized: true
 }));
 
-// Express Messages Middleware
+// Express Validator & Messages Middleware
 app.use(require('connect-flash')());
 app.use(function (req, res, next) {
   res.locals.messages = require('express-messages')(req, res);
   next();
 });
-
-// Express Validator Midleware
 
 // Bring in models
 let Article = require('./models/article');
