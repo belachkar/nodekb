@@ -32,7 +32,7 @@ router.get('/add', (req, res) => {
 router.get('/:id', (req, res) => {
   Article.findById(req.params.id, function (err, article) {
     if (err) {
-      console.log(err);
+      console.error(err);
     } else {
       res.render('article', {
         title: 'Article',
@@ -52,50 +52,63 @@ var formArticlesValidation = [
 
 // Add Submit POST Route
 router.post('/add', urlencodedParser, formArticlesValidation, function (req, res) {
-  const errors = validationResult(req);
-  if(!errors.isEmpty()) {
-    res.render('add_article', {
-      title: 'Add Articles',
-      errors: errors.mapped()
-    });
+  if (!req.body) {
+    return res.sendStatus(400);
   } else {
-    let article = new Article({
-      title: req.body.title,
-      author: req.body.author,
-      body: req.body.body
-    });
-    article.save((err, article) => {
-      if (err) {
-        req.flash('danger', 'Article add operation failed');
-        console.error(err);
-        return;
-      } else {
-        req.flash('success', 'Article added');
-        res.redirect('/');
-      }
-    });
-  }  
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+      res.render('add_article', {
+        title: 'Add Articles',
+        errors: errors.mapped()
+      });
+    } else {
+
+      // Save new article to the DB
+      let article = new Article({
+        title: req.body.title,
+        author: req.body.author,
+        body: req.body.body
+      }).save((err, article) => {
+        if (err) {
+          req.flash('danger', 'Article add operation failed');
+          console.error(err);
+          return;
+        } else {
+          req.flash('success', 'Article added');
+          res.redirect('/');
+        }
+      });
+    }
+  }
+
 });
 
 // Update Submit POST Route
-router.post('/edit/:id', urlencodedParser, function (req, res) {
-
-  let query = {_id: req.params.id};
-  let article = {
-    title: req.body.title,
-    author: req.body.author,
-    body: req.body.body
-  }
-
-  // Update Aticle
-  Article.update(query, article, (err) => {
-    if (err) {
-      console.error(err);
+router.post('/edit/:id', urlencodedParser, formArticlesValidation, function (req, res) {
+  if (!req.body) {
+    return res.sendStatus(400);
+  } else {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+      res.redirect(req.originalUrl);
     } else {
-      req.flash('success', 'Article updated');
-      res.redirect('/');
+      // Update Article
+      let query = {_id: req.params.id};
+      let article = {
+        title: req.body.title,
+        author: req.body.author,
+        body: req.body.body
+      }
+      Article.update(query, article, (err) => {
+        if (err) {
+          console.error(err);
+        } else {
+          req.flash('success', 'Article updated');
+          res.redirect('/');
+        }
+      });
     }
-  });
+  }
 });
 
 // Delete Article
@@ -104,7 +117,7 @@ router.delete('/:id', function(req, res) {
 
   Article.remove(query, function (err) {
     if (err) {
-      console.log(err);
+      console.error(err);
     }
     res.send('Success');
   })
